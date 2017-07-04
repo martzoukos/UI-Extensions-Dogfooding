@@ -1,0 +1,7 @@
+{
+  "id": "incoming-references",
+  "name": "Incoming references",
+  "srcdoc": "./app.html",
+  "src": "http://localhost:3000/",
+  "fieldTypes": ["Entry"]
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://unpkg.com/contentful-ui-extensions-sdk@2"></script>  
+    <script src="https://unpkg.com/contentful@latest/dist/contentful.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/contentful-ui-extensions-sdk@2/dist/cf-extension.css">
+  	<meta name="viewport" content="width=device-width">
+  	<title>UI Extensions Dogfooding session</title>
+  </head>
+  <body>
+    <div id="content">
+      <button id="button" class="cf-btn-primary">Who links to me?</button>
+    </div>
+    <script>
+      window.contentfulExtension.init((extension) => {
+        const button = document.getElementById('button');
+        button.addEventListener('click', (event) => {
+          const childEntryID = extension.entry.getSys().id;
+          const messageElement = document.getElementById('content');
+          let incomingReferences;
+          const client = contentful.createClient({
+            space: '0juryz9mth8n',
+            accessToken: 'e68a7a91fd2a7d112f1c891f68abfe0efe489f312cbe43dbc41278298d516f7a'
+          });
+
+          client.getEntries()
+          .then((response) => {
+            button.classList.add('cf-is-loading');
+            if (window.parent.localStorage) {
+              if (localstorage.getItem('parentEntries') === null) {
+                const parentEntries = response.items.filter((parentEntry) => {
+                  return getParentEntries(parentEntry, childEntryID);
+                });
+                localStorage.setItem('parentEntries', parentEntries);
+              } else {
+                const parentEntries = localstorage.getItem('parentEntries');
+              }
+            } else {
+              const parentEntries = response.items.filter((parentEntry) => {
+                return getParentEntries(parentEntry, childEntryID);
+              });
+            }
+            printMessage(parentEntries, messageElement)
+          })
+          .catch(console.error);
+        });
+      });
+
+
+      const getParentEntries = (parentEntry, childEntryID) => {
+        const referenceField = parentEntry.fields['category'];
+        if (typeof(referenceField) == 'undefined') {
+          return false;
+        } else {
+          if (findInReferenceFieldValues(referenceField, childEntryID) > -1) {
+            return parentEntry;
+          }
+        }
+      };
+
+      const findInReferenceFieldValues = (referenceField, childEntryID) => {
+        return referenceField.findIndex((referenceFieldValue) => {
+          return referenceFieldValue.sys.id === childEntryID;
+        })
+      };
+
+      const printMessage = (incomingReferences, messageElement) => {
+        let content = `<p>There are no incoming references.</p>`;
+        if (incomingReferences.length > 0) {
+          content = `<p>I am linked by ${pluralizeEntries(incomingReferences)}:</p><ul>`;
+          incomingReferences.forEach((entry) => {
+            content += `<li>${generateEntryLink(entry)}</li>`;
+          });
+          content += '</ul>';
+        }
+        console.log(content);
+        messageElement.innerHTML = content;
+      };
+
+      const pluralizeEntries = (incomingReferences) => {
+        return `${incomingReferences.length} ${(incomingReferences.length > 1)?'entries':'entry'}`;
+      };
+
+      const generateEntryLink = (entry) => {
+        return `<a href="https://app.contentful.com/spaces/0juryz9mth8n/entries/${entry.sys.id}" target="parent">${entry.fields.title}</a>`;
+      };      
+    </script>
+  </body>
+</html>
