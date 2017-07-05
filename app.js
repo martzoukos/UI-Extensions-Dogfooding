@@ -58,5 +58,5 @@ const pluralizeEntries = (incomingReferences) => {
 };
 
 const generateEntryLink = (entry) => {
-	return `<a href="https://app.contentful.com/spaces/0juryz9mth8n/entries/${entry.sys.id}" target="parent">${entry.fields.title}</a>`;
+	return `<a href="https://app.contentful.com/spaces/${extensionConfig.spaceID}/entries/${entry.sys.id}" target="parent">${entry.fields.title}</a>`;
 };
