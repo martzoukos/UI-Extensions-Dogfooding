@@ -39,7 +39,7 @@ or do it via your github desktop client if you're working with one.
 
 If you go to the folder of the app you just cloned you'll find a file named `config.sample.js`.
 
-First rename it to 'config.js'.
+First rename it to `config.js`.
 
 Then replace the values `spaceID`, `cdaToken`, `cdaToken` with the correct fields that you'll get from your Space:
 
@@ -76,7 +76,9 @@ Then deploy the extension by running:
 contentful-extension create --space-id <YOUR_SPACE_ID>
 ```
 
-Finally, link the UI extension with a field in your content model. For this we'll edit the Category content type:
+## 7. Edit a the Category content type
+
+Finally, link the UI extension with a field in your content model. For this we'll edit the Category content type by creating a new field of **Reference type**:
 
 ![](https://www.evernote.com/shard/s265/sh/7a4a1f88-22e2-4adc-9038-73a73ccebc33/8da2c3829ad84330/res/393ba088-925d-43f6-b30f-936a3bd86bba/skitch.png?resizeSmall&width=832)
 
@@ -84,7 +86,7 @@ In the "Appearance" tab we should be able to see our UI Extension and select it
 
 ![](https://www.evernote.com/shard/s265/sh/cf7caf06-b018-4dd2-9cc5-735ccb115da7/92b62645ffa6cdaf/res/67a0ce5d-5cec-4e21-9c37-5c42f7a00363/skitch.png?resizeSmall&width=832)
 
-## 7. Congrats!
+## 8. Congrats!
 
 Now go to any category under your Space's Content and see the button. Click on the "Who links to me?" button and see if you get 1 or 2 referencing entries.
 
