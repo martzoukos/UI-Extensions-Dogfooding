@@ -1,17 +1,19 @@
+const extensionConfig = window.extensionConfig;
+
 window.contentfulExtension.init((extension) => {
-	const button = document.getElementById('button');
-  button.addEventListener('click', (event) => {
+	const buttonElement = document.getElementById('button');
+  buttonElement.addEventListener('click', (event) => {
 	  const childEntryID = extension.entry.getSys().id;
 	  const messageElement = document.getElementById('content');
 	  let incomingReferences;
 	  const client = contentful.createClient({
-	    space: '0juryz9mth8n',
-	    accessToken: 'e68a7a91fd2a7d112f1c891f68abfe0efe489f312cbe43dbc41278298d516f7a'
+	    space: extensionConfig.spaceID,
+	    accessToken: extensionConfig.cdaToken
 	  });
 
 		client.getEntries()
 	  .then((response) => {
-	  	button.classList.add('cf-is-loading');
+	  	buttonElement.classList.add('cf-is-loading');
 	    const parentEntries = response.items.filter((parentEntry) => {
 	      return getParentEntries(parentEntry, childEntryID);
 	    });
@@ -23,7 +25,7 @@ window.contentfulExtension.init((extension) => {
 
 
 const getParentEntries = (parentEntry, childEntryID) => {
-	const referenceField = parentEntry.fields['category'];
+	const referenceField = parentEntry.fields[extensionConfig.linkingField];
 	if (typeof(referenceField) == 'undefined') {
 		return false;
 	} else {
@@ -48,7 +50,6 @@ const printMessage = (incomingReferences, messageElement) => {
 		});
 		content += '</ul>';
 	}
-	console.log(content);
 	messageElement.innerHTML = content;
 };
 
