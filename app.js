@@ -12,20 +12,9 @@ window.contentfulExtension.init((extension) => {
 		client.getEntries()
 	  .then((response) => {
 	  	button.classList.add('cf-is-loading');
-	  	if (window.parent.localStorage) {
-	  		if (localstorage.getItem('parentEntries') === null) {
-			    const parentEntries = response.items.filter((parentEntry) => {
-			      return getParentEntries(parentEntry, childEntryID);
-			    });
-			    localStorage.setItem('parentEntries', parentEntries);
-	  		} else {
-	  			const parentEntries = localstorage.getItem('parentEntries');
-	  		}
-	  	} else {
-		    const parentEntries = response.items.filter((parentEntry) => {
-		      return getParentEntries(parentEntry, childEntryID);
-		    });
-	  	}
+	    const parentEntries = response.items.filter((parentEntry) => {
+	      return getParentEntries(parentEntry, childEntryID);
+	    });
 	    printMessage(parentEntries, messageElement)
 	  })
 	  .catch(console.error);
